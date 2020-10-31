@@ -1,10 +1,20 @@
-var dataObj = {
+const baseObj = {
     petType: '',
     property: '',
     wire: '',
     numberOfRecievers: 0,
     isPremium: false,
 }
+var dataObj = {
+    ...baseObj
+}
+
+const collorPrices = {
+    'standard' : 100,
+    'mini' : 50,
+    'premium': 25
+}
+
 function getRecieverDiv(itemNumber) {
     return `<div class="row justify-content-md-center mt-4 mb-4">
     <div class="col question-border m-2">
@@ -15,21 +25,21 @@ function getRecieverDiv(itemNumber) {
                 </div>
             </div>
             <div class="row justify-content-md-center mt-4" id='l${itemNumber}'>
-                <div class="col-sm-6">
-                    <div class="card card-opt" value='large'>
-                        <div class="card-body">
-                            <h5 class="card-title">Large Reciever</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional
-                                content.
-                            </p>
-                            <a class="btn btn-primary">Select</a>
-                        </div>
+                ${dataObj.petType === 'dog' ? `<div class="col-sm-6">
+                <div class="card card-opt" value='standard'>
+                    <div class="card-body">
+                        <h5 class="card-title">Standard Reciever</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional
+                            content.
+                        </p>
+                        <a class="btn btn-primary">Select</a>
                     </div>
                 </div>
+            </div>` : ''}
                 <div class="col-sm-6">
-                    <div class="card card-opt" value='midium'>
+                    <div class="card card-opt" value='mini'>
                         <div class="card-body">
-                            <h5 class="card-title">Midium Reciever</h5>
+                            <h5 class="card-title">Mini Reciever</h5>
                             <p class="card-text">With supporting text below as a natural lead-in to additional
                                 content.
                             </p>
@@ -180,6 +190,7 @@ function q6() {
 }
 
 function createTable() {
+    $('#table').remove();
     $('body').append(`<div class='container' id='table'>
     <table class="table table-bordered">
         <thead>
@@ -198,16 +209,17 @@ function createTable() {
     var total = 0;
     for (key in dataObj) {
         if (key.startsWith('r')) {
+            const price = collorPrices[dataObj[key][0]];
             $('tbody').append(`<tr>
             <th scope="row">${key[1]}</th>
             <td>Reciever ${dataObj[key][0]}</td>
             <td>${dataObj[key][1]}</td>
-            <td>${dataObj.isPremium == 'yes' ? '35$' : '10$'}</td>
+            <td>${dataObj.isPremium == 'yes' ? `${price+collorPrices.premium}$` : `${price}$`}</td>
           </tr>`)
           if (dataObj.isPremium == 'yes') {
-              total=total+35;
+              total=total+price+collorPrices.premium;
           } else {
-              total=total+10;
+              total=total+price;
           }
         }
     }
@@ -302,6 +314,11 @@ function attatchRecieverEvents(itemNumber) {
 
 function onRecieverNext() {
     $('#q5').empty();
+    var key;
+    var total = 0;
+    for (key in dataObj) {
+        if (key.startsWith('r')) {delete dataObj[key]};
+    }
     const numberOfRecievers = Number($('#recievers').val());
     if (numberOfRecievers == 0) {
         alert('Please Enter Number of recievers that you want');
@@ -310,14 +327,30 @@ function onRecieverNext() {
         for (var i = 1; i <= numberOfRecievers; i++) {
             $('#q5').append(getRecieverDiv(i));
             attatchRecieverEvents(i);
-            dataObj[`r${i}`] = ['medium', 'red'];
+            dataObj[`r${i}`] = ['mini', 'red'];
         }
         $('#q5').append(q5Next());
     }
 }
 
+// function resetToStart() {
+//     $('body').empty();
+//     $('body').append(`<div class="container"></div>`);
+//     $('.container').append(questions.q1);
+//     dataObj = {...baseObj};
+// }
+
 
 
 $(document).ready(function () {
+    $('body').append(`<div class="container"></div>`);
     $('.container').append(questions.q1);
+    // $('[name=isDog]').change(function () {
+    //     const pet = $('[name=isDog]').val();
+    //     if ( dataObj.petType.length > 0) {
+    //         resetToStart();
+    //         dataObj.petType = pet;
+    //         $()
+    //     }
+    // })
 })
