@@ -263,7 +263,6 @@ function onNextPremium() {
     const isPremium = $('[name=isPremium]:checked').val();
     if (isPremium !== undefined) {
         dataObj.isPremium = isPremium;
-        alert(JSON.stringify(dataObj));
         createTable();
     } else {
         alert('Please select Type for premium');
