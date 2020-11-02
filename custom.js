@@ -295,7 +295,7 @@ function selectRequiredCard(searchString, className, index = 0) {
 function onNextPetType() {
     const petType = jQuery('[name=isDog]:checked').val();
     if (petType !== undefined) {
-        jQuery('.container').append(questions.q2);
+        jQuery('#c1').append(questions.q2);
         dataObj.petType = petType;
     } else {
         alert('Please select pet type first');
@@ -306,7 +306,7 @@ function onNextProperty() {
     const property = $('#property').val();
     if (property.length > 0) {
         if (dataObj.property.length == 0) {
-            jQuery('.container').append(questions.q3);
+            jQuery('#c1').append(questions.q3);
             selectRequiredCard('#q3 .card', 'card-opt-select');
         }
         dataObj.property = property;
@@ -318,7 +318,7 @@ function onNextProperty() {
 function onNextWireSelect() {
     if (dataObj.wire.length > 0) {
         if (jQuery('#q4').length === 0) {
-            jQuery('.container').append(questions.q4);
+            jQuery('#c1').append(questions.q4);
             jQuery('body').append(questions.q5);
         }
     } else {
@@ -360,15 +360,17 @@ function onRecieverNext() {
 }
 
 function resetFrom(startElemId) {
-    jQuery('.container').children().each(function () {
+    jQuery('#c1').children().each(function () {
         const id = jQuery(this).attr('id');
         if (id !== startElemId) {
             jQuery(this).remove()
         }
     })
-    jQuery('body > div').each(function (i) {
-        if (i !== 0) {
-            jQuery(this).remove()
+    jQuery('body > div').each(function () {
+        const id = jQuery(this).attr('id');
+        const removableIds = ['table', 'q5', 'q6'];
+		if (removableIds.includes(id)){
+            jQuery(this).remove();
         }
     });
     dataObj = { ...baseObj };
@@ -377,8 +379,8 @@ function resetFrom(startElemId) {
 
 
 jQuery(document).ready(function () {
-    jQuery('body').append(`<div class="container"></div>`);
-    jQuery('.container').append(questions.q1);
+    jQuery('body').append(`<div class="container" id="c1"></div>`);
+    jQuery('#c1').append(questions.q1);
     jQuery('[name=isDog]').change(function () {
         const pet = jQuery('[name=isDog]').val();
         if (dataObj.petType.length > 0) {
