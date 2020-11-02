@@ -16,6 +16,8 @@ const collorPrices = {
     'premium': 25
 }
 
+const staticImagePath = 'http://abmagroup.co/wp-content/themes/generatepress/images'
+
 function getRecieverDiv(itemNumber) {
     return `<div class="row justify-content-md-center mt-4 mb-4">
     <div class="col question-border m-2">
@@ -62,7 +64,7 @@ function getRecieverDiv(itemNumber) {
         </div>
     </div>
     <div class="col question-border m-2" id="r${itemNumber}">
-        <img src="./images/collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
+        <img src="${staticImagePath}/collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
     </div>
 </div>`;
 }
@@ -329,7 +331,7 @@ function attatchRecieverEvents(itemNumber) {
     jQuery(`[target=r${itemNumber}] span`).each(function () {
         jQuery(this).click(function () {
             const color = jQuery(this).attr('value');
-            jQuery(`#r${itemNumber} img`).attr('src', `./images/collor-${color}.jpg`)
+            jQuery(`#r${itemNumber} img`).attr('src', `${staticImagePath}/collor-${color}.jpg`)
             dataObj[`r${itemNumber}`][1] = color;
         })
     })
