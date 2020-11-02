@@ -2,6 +2,7 @@ const baseObj = {
     petType: '',
     property: '',
     wire: '',
+    wirePrice: 0,
     numberOfRecievers: 0,
     isPremium: false,
 }
@@ -10,8 +11,8 @@ var dataObj = {
 }
 
 const collorPrices = {
-    'standard' : 100,
-    'mini' : 50,
+    'standard': 100,
+    'mini': 50,
     'premium': 25
 }
 
@@ -111,30 +112,30 @@ function q3() {
     </div>
     <div class="row justify-content-md-center mt-4">
         <div class="col-sm-4">
-            <div class="card card-opt m-2" value='300 feet'>
+            <div class="card card-opt m-2" value='300 feet' amount='100'>
                 <div class="card-body">
-                    <h5 class="card-title">300 feet</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
+                    <h5 class="card-title">300 meter</h5>
+                    <p class="card-text">This wire has a price of 100$.
                     </p>
                     <a class="btn btn-primary">Select</a>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card card-opt m-2" value='900 feet'>
+            <div class="card card-opt m-2" value='900 feet' amount='150'>
                 <div class="card-body">
-                    <h5 class="card-title">Less than 900 feet</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
+                    <h5 class="card-title">Less than 900 meter</h5>
+                    <p class="card-text">This wire has a price of 150$.
                     </p>
                     <a class="btn btn-primary">Select</a>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card card-opt m-2" value='900 feet plus'>
+            <div class="card card-opt m-2" value='900 feet plus' amount='250'>
                 <div class="card-body">
-                    <h5 class="card-title">More than 900 feet</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
+                    <h5 class="card-title">More than 900 meter</h5>
+                    <p class="card-text">This wire has a price of 250$.
                     </p>
                     <a class="btn btn-primary">Select</a>
                 </div>
@@ -184,7 +185,7 @@ function q6() {
         </div>
     </div>
     <div class="row justify-content-md-center mt-4 mb-4">
-        <a class="btn btn-primary" onclick="onNextPremium()">Next</a>
+        <a class="btn btn-primary" onclick="onNextPremium()">Submit: to see bill</a>
     </div>
 </div>`
 }
@@ -214,15 +215,32 @@ function createTable() {
             <th scope="row">${key[1]}</th>
             <td>Reciever ${dataObj[key][0]}</td>
             <td>${dataObj[key][1]}</td>
-            <td>${dataObj.isPremium == 'yes' ? `${price+collorPrices.premium}$` : `${price}$`}</td>
+            <td>${dataObj.isPremium == 'yes' ? `${price + collorPrices.premium}$` : `${price}$`}</td>
           </tr>`)
-          if (dataObj.isPremium == 'yes') {
-              total=total+price+collorPrices.premium;
-          } else {
-              total=total+price;
-          }
+            if (dataObj.isPremium == 'yes') {
+                total = total + price + collorPrices.premium;
+            } else {
+                total = total + price;
+            }
         }
     }
+    // --- Wire Amount ----
+    $('tbody').append(`<tr>
+            <th scope="row">#</th>
+            <th>Wire Size</th>
+            <td>${dataObj.wire}</td>
+            <td>${dataObj.wirePrice}$ </td>
+          </tr>`);
+    // --- Wire Amount ----
+    total = total + dataObj.wirePrice;
+    // --- Total Amount ----
+    $('tbody').append(`<tr>
+            <th scope="row">#</th>
+            <th>Total Bill</th>
+            <td></td>
+            <td>${total}$ </td>
+          </tr>`);
+    // --- Total Amount ----
 }
 
 function q5Next() {
@@ -245,7 +263,7 @@ function onNextPremium() {
     const isPremium = $('[name=isPremium]:checked').val();
     if (isPremium !== undefined) {
         dataObj.isPremium = isPremium;
-        // alert(JSON.stringify(dataObj));
+        alert(JSON.stringify(dataObj));
         createTable();
     } else {
         alert('Please select Type for premium');
@@ -253,7 +271,9 @@ function onNextPremium() {
 }
 
 function onColorColourNext() {
-    $('body').append(questions.q6);
+    if ($('#q6').length == 0) {
+        $('body').append(questions.q6);
+    }
 }
 
 function selectRequiredCard(searchString, className, index = 0) {
@@ -263,6 +283,7 @@ function selectRequiredCard(searchString, className, index = 0) {
             $(this).addClass(className);
             if (index === 0) {
                 dataObj.wire = $(this).attr('value');
+                dataObj.wirePrice = Number($(this).attr('amount'));
             } else {
                 dataObj[`r${index}`][0] = $(this).attr('value');
             }
@@ -283,8 +304,10 @@ function onNextPetType() {
 function onNextProperty() {
     const property = $('#property').val();
     if (property.length > 0) {
-        $('.container').append(questions.q3);
-        selectRequiredCard('#q3 .card', 'card-opt-select');
+        if (dataObj.property.length == 0) {
+            $('.container').append(questions.q3);
+            selectRequiredCard('#q3 .card', 'card-opt-select');
+        }
         dataObj.property = property;
     } else {
         alert('Please provide some property measures');
@@ -293,8 +316,10 @@ function onNextProperty() {
 
 function onNextWireSelect() {
     if (dataObj.wire.length > 0) {
-        $('.container').append(questions.q4);
-        $('body').append(questions.q5);
+        if ($('#q4').length === 0) {
+            $('.container').append(questions.q4);
+            $('body').append(questions.q5);
+        }
     } else {
         alert('Please select wire length first');
     }
@@ -317,7 +342,7 @@ function onRecieverNext() {
     var key;
     var total = 0;
     for (key in dataObj) {
-        if (key.startsWith('r')) {delete dataObj[key]};
+        if (key.startsWith('r')) { delete dataObj[key] };
     }
     const numberOfRecievers = Number($('#recievers').val());
     if (numberOfRecievers == 0) {
@@ -333,24 +358,30 @@ function onRecieverNext() {
     }
 }
 
-// function resetToStart() {
-//     $('body').empty();
-//     $('body').append(`<div class="container"></div>`);
-//     $('.container').append(questions.q1);
-//     dataObj = {...baseObj};
-// }
+function resetFrom(startElemId) {
+    $('.container').children().each(function () {
+        const id = $(this).attr('id');
+        if (id !== startElemId) {
+            $(this).remove()
+        }
+    })
+    $('body > div').each(function (i) {
+        if (i !== 0) {
+            $(this).remove()
+        }
+    });
+    dataObj = { ...baseObj };
+}
 
 
 
 $(document).ready(function () {
     $('body').append(`<div class="container"></div>`);
     $('.container').append(questions.q1);
-    // $('[name=isDog]').change(function () {
-    //     const pet = $('[name=isDog]').val();
-    //     if ( dataObj.petType.length > 0) {
-    //         resetToStart();
-    //         dataObj.petType = pet;
-    //         $()
-    //     }
-    // })
+    $('[name=isDog]').change(function () {
+        const pet = $('[name=isDog]').val();
+        if (dataObj.petType.length > 0) {
+            resetFrom('q1');
+        }
+    })
 })
