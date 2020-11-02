@@ -191,8 +191,8 @@ function q6() {
 }
 
 function createTable() {
-    $('#table').remove();
-    $('body').append(`<div class='container' id='table'>
+    jQuery('#table').remove();
+    jQuery('body').append(`<div class='container' id='table'>
     <table class="table table-bordered">
         <thead>
           <tr>
@@ -211,7 +211,7 @@ function createTable() {
     for (key in dataObj) {
         if (key.startsWith('r')) {
             const price = collorPrices[dataObj[key][0]];
-            $('tbody').append(`<tr>
+            jQuery('tbody').append(`<tr>
             <th scope="row">${key[1]}</th>
             <td>Reciever ${dataObj[key][0]}</td>
             <td>${dataObj[key][1]}</td>
@@ -225,7 +225,7 @@ function createTable() {
         }
     }
     // --- Wire Amount ----
-    $('tbody').append(`<tr>
+    jQuery('tbody').append(`<tr>
             <th scope="row">#</th>
             <th>Wire Size</th>
             <td>${dataObj.wire}</td>
@@ -234,7 +234,7 @@ function createTable() {
     // --- Wire Amount ----
     total = total + dataObj.wirePrice;
     // --- Total Amount ----
-    $('tbody').append(`<tr>
+    jQuery('tbody').append(`<tr>
             <th scope="row">#</th>
             <th>Total Bill</th>
             <td></td>
@@ -270,30 +270,30 @@ function onNextPremium() {
 }
 
 function onColorColourNext() {
-    if ($('#q6').length == 0) {
-        $('body').append(questions.q6);
+    if (jQuery('#q6').length == 0) {
+        jQuery('body').append(questions.q6);
     }
 }
 
 function selectRequiredCard(searchString, className, index = 0) {
-    $(searchString).each(function () {
-        $(this).click(function () {
-            $(searchString).removeClass(className);
-            $(this).addClass(className);
+    jQuery(searchString).each(function () {
+        jQuery(this).click(function () {
+            jQuery(searchString).removeClass(className);
+            jQuery(this).addClass(className);
             if (index === 0) {
-                dataObj.wire = $(this).attr('value');
-                dataObj.wirePrice = Number($(this).attr('amount'));
+                dataObj.wire = jQuery(this).attr('value');
+                dataObj.wirePrice = Number(jQuery(this).attr('amount'));
             } else {
-                dataObj[`r${index}`][0] = $(this).attr('value');
+                dataObj[`r${index}`][0] = jQuery(this).attr('value');
             }
         })
     });
 }
 
 function onNextPetType() {
-    const petType = $('[name=isDog]:checked').val();
+    const petType = jQuery('[name=isDog]:checked').val();
     if (petType !== undefined) {
-        $('.container').append(questions.q2);
+        jQuery('.container').append(questions.q2);
         dataObj.petType = petType;
     } else {
         alert('Please select pet type first');
@@ -304,7 +304,7 @@ function onNextProperty() {
     const property = $('#property').val();
     if (property.length > 0) {
         if (dataObj.property.length == 0) {
-            $('.container').append(questions.q3);
+            jQuery('.container').append(questions.q3);
             selectRequiredCard('#q3 .card', 'card-opt-select');
         }
         dataObj.property = property;
@@ -315,9 +315,9 @@ function onNextProperty() {
 
 function onNextWireSelect() {
     if (dataObj.wire.length > 0) {
-        if ($('#q4').length === 0) {
-            $('.container').append(questions.q4);
-            $('body').append(questions.q5);
+        if (jQuery('#q4').length === 0) {
+            jQuery('.container').append(questions.q4);
+            jQuery('body').append(questions.q5);
         }
     } else {
         alert('Please select wire length first');
@@ -326,10 +326,10 @@ function onNextWireSelect() {
 }
 
 function attatchRecieverEvents(itemNumber) {
-    $(`[target=r${itemNumber}] span`).each(function () {
-        $(this).click(function () {
-            const color = $(this).attr('value');
-            $(`#r${itemNumber} img`).attr('src', `./images/collor-${color}.jpg`)
+    jQuery(`[target=r${itemNumber}] span`).each(function () {
+        jQuery(this).click(function () {
+            const color = jQuery(this).attr('value');
+            jQuery(`#r${itemNumber} img`).attr('src', `./images/collor-${color}.jpg`)
             dataObj[`r${itemNumber}`][1] = color;
         })
     })
@@ -337,36 +337,36 @@ function attatchRecieverEvents(itemNumber) {
 }
 
 function onRecieverNext() {
-    $('#q5').empty();
+    jQuery('#q5').empty();
     var key;
     var total = 0;
     for (key in dataObj) {
         if (key.startsWith('r')) { delete dataObj[key] };
     }
-    const numberOfRecievers = Number($('#recievers').val());
+    const numberOfRecievers = Number(jQuery('#recievers').val());
     if (numberOfRecievers == 0) {
         alert('Please Enter Number of recievers that you want');
     } else {
         dataObj.numberOfRecievers = numberOfRecievers;
         for (var i = 1; i <= numberOfRecievers; i++) {
-            $('#q5').append(getRecieverDiv(i));
+            jQuery('#q5').append(getRecieverDiv(i));
             attatchRecieverEvents(i);
             dataObj[`r${i}`] = ['mini', 'red'];
         }
-        $('#q5').append(q5Next());
+        jQuery('#q5').append(q5Next());
     }
 }
 
 function resetFrom(startElemId) {
-    $('.container').children().each(function () {
-        const id = $(this).attr('id');
+    jQuery('.container').children().each(function () {
+        const id = jQuery(this).attr('id');
         if (id !== startElemId) {
-            $(this).remove()
+            jQuery(this).remove()
         }
     })
-    $('body > div').each(function (i) {
+    jQuery('body > div').each(function (i) {
         if (i !== 0) {
-            $(this).remove()
+            jQuery(this).remove()
         }
     });
     dataObj = { ...baseObj };
@@ -374,11 +374,11 @@ function resetFrom(startElemId) {
 
 
 
-$(document).ready(function () {
-    $('body').append(`<div class="container"></div>`);
-    $('.container').append(questions.q1);
-    $('[name=isDog]').change(function () {
-        const pet = $('[name=isDog]').val();
+jQuery(document).ready(function () {
+    jQuery('body').append(`<div class="container"></div>`);
+    jQuery('.container').append(questions.q1);
+    jQuery('[name=isDog]').change(function () {
+        const pet = jQuery('[name=isDog]').val();
         if (dataObj.petType.length > 0) {
             resetFrom('q1');
         }
