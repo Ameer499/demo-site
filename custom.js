@@ -112,7 +112,7 @@ function getRecieverDiv(itemNumber) {
         </div>
     </div>
     <div class="col question-border m-2" id="r${itemNumber}">
-        <img src="${staticImagePath}/standard-collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
+        <img src="${staticImagePath}/mini-collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
     </div>
 </div>`;
 }
@@ -285,6 +285,7 @@ function selectRequiredCard(searchString, className, index = 0) {
                 dataObj.wirePrice = Number(jQuery(this).attr('amount'));
             } else {
                 dataObj[`r${index}`][0] = jQuery(this).attr('value');
+                jQuery(`#r${index} img`).attr('src', `${staticImagePath}/${dataObj[`r${index}`][0]}-collor-${dataObj[`r${index}`][1]}.jpg`)
             }
         })
     });
@@ -301,21 +302,23 @@ function onNextPetType() {
 }
 
 function onNextProperty() {
-    // jQuery('#q3').remove();
+
     const property = $('#property').val();
     if (property.length > 0) {
-        if (dataObj.property.length == 0) {
+        if (dataObj.property.length != 0) {
+            jQuery('#q3-opts').empty();
+        } else {
             jQuery('#c1').append(questions.q3);
-            const propertyInNumber = Number(property);
-            if (propertyInNumber >= 0 && propertyInNumber <= 300) {
-                jQuery('#q3-opts').append(wireDiv['1']);
-            } else if (propertyInNumber > 300 && propertyInNumber <= 900) {
-                jQuery('#q3-opts').append(wireDiv['2']);
-            } else {
-                jQuery('#q3-opts').append(wireDiv['3']);
-            }
-            selectRequiredCard('#q3 .card', 'card-opt-select');
         }
+        const propertyInNumber = Number(property);
+        if (propertyInNumber >= 0 && propertyInNumber <= 300) {
+            jQuery('#q3-opts').append(wireDiv['1']);
+        } else if (propertyInNumber > 300 && propertyInNumber <= 900) {
+            jQuery('#q3-opts').append(wireDiv['2']);
+        } else {
+            jQuery('#q3-opts').append(wireDiv['3']);
+        }
+        selectRequiredCard('#q3 .card', 'card-opt-select');
         dataObj.property = property;
     } else {
         alert('Please provide some property measures');
