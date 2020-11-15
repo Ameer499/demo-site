@@ -118,7 +118,7 @@ function getRecieverDiv(itemNumber) {
 }
 
 function recieverPremiumOptClick(itemNumber, action) {
-    if(action === 'yes') {
+    if (action === 'yes') {
         dataObj[`r${itemNumber}`][2] = true;
     } else {
         dataObj[`r${itemNumber}`][2] = false;
@@ -151,10 +151,11 @@ function q2() {
     return `<div class="question-border mt-4" id='q2'>
     <div class="row justify-content-md-center mt-4">
         How big is your property ?
+        <span><a href="https://www.youtube.com/" target="_blank"> Check Video</a></span>
     </div>
     <div class="row justify-content-md-center mt-4">
         <div class="col-md-6 mb-3">
-            <input type="text" id="property" class="form-control" placeholder="Property in meters">
+            <input type="number" id="property" class="form-control" placeholder="Property in meters">
         </div>
     </div>
     <div class="row justify-content-md-center mt-4 mb-4">
@@ -165,9 +166,7 @@ function q2() {
 
 function q3() {
     return `<div class="question-border mt-4" id='q3'>
-    <div class="row justify-content-md-center mt-4">
-        How much wire do you want ?
-    </div>
+    
     <div class="row justify-content-md-center mt-4" id='q3-opts'>
     </div>
     <div class="row justify-content-md-center mt-4 mb-4">
@@ -302,16 +301,17 @@ function onNextPetType() {
 }
 
 function onNextProperty() {
+    // jQuery('#q3').remove();
     const property = $('#property').val();
     if (property.length > 0) {
         if (dataObj.property.length == 0) {
             jQuery('#c1').append(questions.q3);
             const propertyInNumber = Number(property);
-            if( propertyInNumber >= 0 && propertyInNumber <= 300 ) {
+            if (propertyInNumber >= 0 && propertyInNumber <= 300) {
                 jQuery('#q3-opts').append(wireDiv['1']);
-            } else if ( propertyInNumber > 300 && propertyInNumber <= 900 ) {
+            } else if (propertyInNumber > 300 && propertyInNumber <= 900) {
                 jQuery('#q3-opts').append(wireDiv['2']);
-            } else  {
+            } else {
                 jQuery('#q3-opts').append(wireDiv['3']);
             }
             selectRequiredCard('#q3 .card', 'card-opt-select');
@@ -355,7 +355,7 @@ function onRecieverNext() {
     if (numberOfRecievers <= 0) {
         alert('Please Enter Valid Number of recievers that you want');
     } else {
-        if (numberOfRecievers >=10 ) {
+        if (numberOfRecievers >= 10) {
             alert('Please select recievers between 1 to 10');
             return;
         }
