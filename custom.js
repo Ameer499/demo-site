@@ -4,20 +4,52 @@ const baseObj = {
     wire: '',
     wirePrice: 0,
     numberOfRecievers: 0,
-    isPremium: false,
 }
 var dataObj = {
     ...baseObj
 }
 
 const collorPrices = {
-    'standard': 100,
-    'mini': 50,
+    'standard': 50,
+    'mini': 25,
     'premium': 25
 }
 
-const staticImagePath = 'http://abmagroup.co/wp-content/themes/generatepress/images'
+// const staticImagePath = 'http://abmagroup.co/wp-content/themes/generatepress/images'
+const staticImagePath = './images';
 
+const wireDiv = {
+    "1": `<div class="col-sm-4">
+    <div class="card card-opt m-2" value='300 meter' amount='100'>
+        <div class="card-body">
+            <h5 class="card-title">For 300 meter</h5>
+            <p class="card-text">We recommend ground keeper kit. Price: 100$
+            </p>
+            <a class="btn btn-primary">Select</a>
+        </div>
+    </div>
+</div>`,
+    "2": `<div class="col-sm-4">
+    <div class="card card-opt m-2" value='900 meter' amount='150'>
+        <div class="card-body">
+            <h5 class="card-title">Between 300 to 900 meter</h5>
+            <p class="card-text">We recommend DwFM1200D. Price:150$
+            </p>
+            <a class="btn btn-primary">Select</a>
+        </div>
+    </div>
+</div>`,
+    "3": `<div class="col-sm-4">
+    <div class="card card-opt m-2" value='900 meter plus' amount='200'>
+        <div class="card-body">
+            <h5 class="card-title">More than 900 meter</h5>
+            <p class="card-text">We recommend DwFM1200D with 24V Power Supply. Price 200$
+            </p>
+            <a class="btn btn-primary">Select</a>
+        </div>
+    </div>
+</div>`
+}
 function getRecieverDiv(itemNumber) {
     return `<div class="row justify-content-md-center mt-4 mb-4">
     <div class="col question-border m-2">
@@ -61,12 +93,36 @@ function getRecieverDiv(itemNumber) {
                     <span class="color-picker purple m-2" value="purple"></span>
                 </div>
             </div>
+            <div class="row justify-content-md-center mt-4">
+                <div class="col justify-content-md-center">
+                    Do you want Premium (it will add 25$)?
+                    <span><a href="https://www.youtube.com/" target="_blank">Check Video</a></span>
+                </div>
+                <div class="col" premium-opt-reciever='premium-${itemNumber}'>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id='premium-${itemNumber}-yes' name='premium-${itemNumber}-isPremium' class="custom-control-input" value='premium-${itemNumber}-yes' onclick="recieverPremiumOptClick(${itemNumber}, 'yes')">
+                        <label class="custom-control-label" for='premium-${itemNumber}-yes'>Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id='premium-${itemNumber}-no' name='premium-${itemNumber}-isPremium' class="custom-control-input" value='premium-${itemNumber}-no' onclick="recieverPremiumOptClick(${itemNumber}, 'no')">
+                        <label class="custom-control-label" for='premium-${itemNumber}-no'>No</label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col question-border m-2" id="r${itemNumber}">
-        <img src="${staticImagePath}/collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
+        <img src="${staticImagePath}/standard-collor-red.jpg" alt="Girl in a jacket" width="500" height="600">
     </div>
 </div>`;
+}
+
+function recieverPremiumOptClick(itemNumber, action) {
+    if(action === 'yes') {
+        dataObj[`r${itemNumber}`][2] = true;
+    } else {
+        dataObj[`r${itemNumber}`][2] = false;
+    }
 }
 
 
@@ -98,7 +154,7 @@ function q2() {
     </div>
     <div class="row justify-content-md-center mt-4">
         <div class="col-md-6 mb-3">
-            <input type="text" id="property" class="form-control" placeholder="Property in Yards">
+            <input type="text" id="property" class="form-control" placeholder="Property in meters">
         </div>
     </div>
     <div class="row justify-content-md-center mt-4 mb-4">
@@ -112,37 +168,7 @@ function q3() {
     <div class="row justify-content-md-center mt-4">
         How much wire do you want ?
     </div>
-    <div class="row justify-content-md-center mt-4">
-        <div class="col-sm-4">
-            <div class="card card-opt m-2" value='300 feet' amount='100'>
-                <div class="card-body">
-                    <h5 class="card-title">300 meter</h5>
-                    <p class="card-text">This wire has a price of 100$.
-                    </p>
-                    <a class="btn btn-primary">Select</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="card card-opt m-2" value='900 feet' amount='150'>
-                <div class="card-body">
-                    <h5 class="card-title">Less than 900 meter</h5>
-                    <p class="card-text">This wire has a price of 150$.
-                    </p>
-                    <a class="btn btn-primary">Select</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="card card-opt m-2" value='900 feet plus' amount='250'>
-                <div class="card-body">
-                    <h5 class="card-title">More than 900 meter</h5>
-                    <p class="card-text">This wire has a price of 250$.
-                    </p>
-                    <a class="btn btn-primary">Select</a>
-                </div>
-            </div>
-        </div>
+    <div class="row justify-content-md-center mt-4" id='q3-opts'>
     </div>
     <div class="row justify-content-md-center mt-4 mb-4">
         <a class="btn btn-primary" onclick="onNextWireSelect()">Next</a>
@@ -157,7 +183,7 @@ function q4() {
     </div>
     <div class="row justify-content-md-center mt-4">
         <div class="col-md-6 mb-3">
-            <input type="number" id="recievers" class="form-control" placeholder="Number of recievers">
+            <input type="number" id="recievers" class="form-control" placeholder="Please select from 1 to 10">
         </div>
         <div>
             <a class="btn btn-primary" onclick="onRecieverNext()">Next</a>
@@ -169,27 +195,6 @@ function q4() {
 function q5() {
     return `<div class="container question-border mt-4 mb-4" id='q5'>
     </div>`;
-}
-
-function q6() {
-    return ` <div class="container question-border mt-4 mb-4" id='q6'>
-    <div class="row justify-content-md-center mt-4">
-        Do you want to upgrade to Premium?
-    </div>
-    <div class="row justify-content-md-center mt-4">
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="yes" name="isPremium" class="custom-control-input" value='yes'>
-            <label class="custom-control-label" for="yes">Yes</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="no" name="isPremium" class="custom-control-input" value='no'>
-            <label class="custom-control-label" for="no">No</label>
-        </div>
-    </div>
-    <div class="row justify-content-md-center mt-4 mb-4">
-        <a class="btn btn-primary" onclick="onNextPremium()">Submit: to see bill</a>
-    </div>
-</div>`
 }
 
 function createTable() {
@@ -217,9 +222,9 @@ function createTable() {
             <th scope="row">${key[1]}</th>
             <td>Reciever ${dataObj[key][0]}</td>
             <td>${dataObj[key][1]}</td>
-            <td>${dataObj.isPremium == 'yes' ? `${price + collorPrices.premium}$` : `${price}$`}</td>
+            <td>${dataObj[key][2] == true ? `${price + collorPrices.premium}$` : `${price}$`}</td>
           </tr>`)
-            if (dataObj.isPremium == 'yes') {
+            if (dataObj[key][2] == true) {
                 total = total + price + collorPrices.premium;
             } else {
                 total = total + price;
@@ -243,12 +248,17 @@ function createTable() {
             <td>${total}$ </td>
           </tr>`);
     // --- Total Amount ----
+
+    jQuery('#table').append(`<div class="d-flex justify-content-between bd-highlight mt-4 mb-4">
+    <button type="button" class="btn btn-outline-success">Add To Cart / Continue</button>
+    <button type="button" class="btn btn-outline-info">Go To Cart For Payment</button>
+  </div>`);
 }
 
 function q5Next() {
     return `
     <div class="row justify-content-md-center mt-4 mb-4">
-        <a class="btn btn-primary" onclick="onColorColourNext()">Next</a>
+        <a class="btn btn-primary" onclick="onColorColourNext()">Submit: to see bill</a>
     </div>`
 }
 
@@ -258,22 +268,11 @@ const questions = {
     'q3': q3(),
     'q4': q4(),
     'q5': q5(),
-    'q6': q6(),
-}
-
-function onNextPremium() {
-    const isPremium = $('[name=isPremium]:checked').val();
-    if (isPremium !== undefined) {
-        dataObj.isPremium = isPremium;
-        createTable();
-    } else {
-        alert('Please select Type for premium');
-    }
 }
 
 function onColorColourNext() {
     if (jQuery('#q6').length == 0) {
-        jQuery('body').append(questions.q6);
+        createTable();
     }
 }
 
@@ -307,6 +306,14 @@ function onNextProperty() {
     if (property.length > 0) {
         if (dataObj.property.length == 0) {
             jQuery('#c1').append(questions.q3);
+            const propertyInNumber = Number(property);
+            if( propertyInNumber >= 0 && propertyInNumber <= 300 ) {
+                jQuery('#q3-opts').append(wireDiv['1']);
+            } else if ( propertyInNumber > 300 && propertyInNumber <= 900 ) {
+                jQuery('#q3-opts').append(wireDiv['2']);
+            } else  {
+                jQuery('#q3-opts').append(wireDiv['3']);
+            }
             selectRequiredCard('#q3 .card', 'card-opt-select');
         }
         dataObj.property = property;
@@ -324,14 +331,13 @@ function onNextWireSelect() {
     } else {
         alert('Please select wire length first');
     }
-
 }
 
 function attatchRecieverEvents(itemNumber) {
     jQuery(`[target=r${itemNumber}] span`).each(function () {
         jQuery(this).click(function () {
             const color = jQuery(this).attr('value');
-            jQuery(`#r${itemNumber} img`).attr('src', `${staticImagePath}/collor-${color}.jpg`)
+            jQuery(`#r${itemNumber} img`).attr('src', `${staticImagePath}/${dataObj[`r${itemNumber}`][0]}-collor-${color}.jpg`)
             dataObj[`r${itemNumber}`][1] = color;
         })
     })
@@ -346,14 +352,18 @@ function onRecieverNext() {
         if (key.startsWith('r')) { delete dataObj[key] };
     }
     const numberOfRecievers = Number(jQuery('#recievers').val());
-    if (numberOfRecievers == 0) {
-        alert('Please Enter Number of recievers that you want');
+    if (numberOfRecievers <= 0) {
+        alert('Please Enter Valid Number of recievers that you want');
     } else {
+        if (numberOfRecievers >=10 ) {
+            alert('Please select recievers between 1 to 10');
+            return;
+        }
         dataObj.numberOfRecievers = numberOfRecievers;
         for (var i = 1; i <= numberOfRecievers; i++) {
             jQuery('#q5').append(getRecieverDiv(i));
             attatchRecieverEvents(i);
-            dataObj[`r${i}`] = ['mini', 'red'];
+            dataObj[`r${i}`] = ['mini', 'red', false];
         }
         jQuery('#q5').append(q5Next());
     }
@@ -369,7 +379,7 @@ function resetFrom(startElemId) {
     jQuery('body > div').each(function () {
         const id = jQuery(this).attr('id');
         const removableIds = ['table', 'q5', 'q6'];
-		if (removableIds.includes(id)){
+        if (removableIds.includes(id)) {
             jQuery(this).remove();
         }
     });
